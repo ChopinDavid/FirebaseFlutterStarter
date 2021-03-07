@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_flutter_starter/models/routes.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
-import 'package:firebase_flutter_starter/utils/hug_icons.dart';
+import 'package:firebase_flutter_starter/utils/starter_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
