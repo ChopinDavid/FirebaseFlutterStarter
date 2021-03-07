@@ -83,7 +83,7 @@ class ProfilePicture extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Icon(
-                HugIcons.pencil,
+                StarterIcons.pencil,
                 color: Colors.white,
                 size: 15,
               ),
