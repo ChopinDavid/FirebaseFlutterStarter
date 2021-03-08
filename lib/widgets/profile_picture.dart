@@ -40,6 +40,7 @@ class ProfilePicture extends StatelessWidget {
                     : Image.file(
                         file!,
                         fit: BoxFit.cover,
+                        key: UniqueKey(),
                       )
                 : Image.network(
                     url!,
@@ -55,22 +56,17 @@ class ProfilePicture extends StatelessWidget {
                         .get<NavigationService>()
                         .pushNamed(Routes.IMAGESOURCE,
                             arguments: (ImageSource imageSource) async {
-                      try {
-                        final pickedImage = await _picker.getImage(
-                          source: imageSource,
-                        );
-                        if (onImageSelected != null) {
-                          final File imageFile = await GetIt.instance
-                              .get<DocumentService>()
-                              .saveImage(
-                                  image: pickedImage!,
-                                  relativePath: 'profilePicture');
-                          onImageSelected!(imageFile, null);
-                        }
-                      } catch (e) {
-                        if (onImageSelected != null) {
-                          onImageSelected!(null, e);
-                        }
+                      final pickedImage = await _picker.getImage(
+                        source: imageSource,
+                      );
+                      if (onImageSelected != null) {
+                        File? imageFile = await GetIt.instance
+                            .get<DocumentService>()
+                            .saveImage(
+                                image: pickedImage!,
+                                relativePath: 'profilePicture');
+
+                        onImageSelected!(imageFile, null);
                       }
                     });
                   },
