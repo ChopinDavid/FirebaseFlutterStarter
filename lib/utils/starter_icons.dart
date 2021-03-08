@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/StarterIcons.ttf
 ///
-///
+/// 
 ///
 import 'package:flutter/widgets.dart';
 
@@ -21,6 +21,7 @@ class StarterIcons {
   static const _kFontFam = 'StarterIcons';
   static const String? _kFontPkg = null;
 
-  static const IconData pencil =
-      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData pencil = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData profile = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData home = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

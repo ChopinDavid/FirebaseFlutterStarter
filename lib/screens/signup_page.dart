@@ -40,7 +40,7 @@ class _SignupPageState extends State<SignupPage> {
             if (state is AuthSignupComplete) {
               final navigationService = GetIt.instance.get<NavigationService>();
               SchedulerBinding.instance?.addPostFrameCallback(
-                  (_) => navigationService.pushNamed(Routes.HOME));
+                  (_) => navigationService.pushNamed(Routes.TABBAR));
             }
             return Container(
               color: Colors.white,

@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
             if (state is AuthLoginComplete) {
               final navigationService = GetIt.instance.get<NavigationService>();
               SchedulerBinding.instance?.addPostFrameCallback(
-                  (_) => navigationService.pushNamed(Routes.HOME));
+                  (_) => navigationService.pushNamed(Routes.TABBAR));
             }
             return Container(
               color: Colors.white,

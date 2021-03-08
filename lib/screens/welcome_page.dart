@@ -17,7 +17,7 @@ class _WelcomePageState extends State<WelcomePage> {
     if (FirebaseAuth.instance.currentUser != null) {
       final navigationService = GetIt.instance.get<NavigationService>();
       SchedulerBinding.instance?.addPostFrameCallback(
-          (_) => navigationService.pushNamed(Routes.HOME));
+          (_) => navigationService.pushNamed(Routes.TABBAR));
     }
     super.initState();
   }
