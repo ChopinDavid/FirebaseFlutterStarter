@@ -15,12 +15,14 @@ class SignupUserWithEmailAndPassword extends AuthEvent {
   final String lastName;
   final String email;
   final String password;
+  final File? profilePicture;
 
   SignupUserWithEmailAndPassword({
     required this.firstName,
     required this.lastName,
     required this.email,
     required this.password,
+    this.profilePicture,
   });
 }
 

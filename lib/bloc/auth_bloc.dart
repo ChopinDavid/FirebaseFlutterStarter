@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,6 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               firstName: event.firstName,
               lastName: event.lastName,
               email: event.email,
+              profilePicture: event.profilePicture,
             );
         yield (AuthSignupComplete(userCredential: userCredential));
       } on FirebaseAuthException catch (e) {

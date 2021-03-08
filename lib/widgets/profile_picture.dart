@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_flutter_starter/models/routes.dart';
+import 'package:firebase_flutter_starter/services/document_service.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:firebase_flutter_starter/utils/starter_icons.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,8 @@ import 'package:image_picker/image_picker.dart';
 class ProfilePicture extends StatelessWidget {
   final bool editable;
   final String? url;
-  final PickedFile? file;
-  final Function(PickedFile?, dynamic?)? onImageSelected;
+  final File? file;
+  final Function(File?, dynamic?)? onImageSelected;
 
   ProfilePicture(
       {this.editable = false, this.url, this.file, this.onImageSelected});
@@ -37,7 +38,7 @@ class ProfilePicture extends StatelessWidget {
                         fit: BoxFit.cover,
                       )
                     : Image.file(
-                        File(file!.path),
+                        file!,
                         fit: BoxFit.cover,
                       )
                 : Image.network(
@@ -49,16 +50,22 @@ class ProfilePicture extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () async {
+                    FocusScope.of(context).unfocus();
                     GetIt.instance
                         .get<NavigationService>()
                         .pushNamed(Routes.IMAGESOURCE,
                             arguments: (ImageSource imageSource) async {
                       try {
-                        final pickedFile = await _picker.getImage(
+                        final pickedImage = await _picker.getImage(
                           source: imageSource,
                         );
                         if (onImageSelected != null) {
-                          onImageSelected!(pickedFile, null);
+                          final File imageFile = await GetIt.instance
+                              .get<DocumentService>()
+                              .saveImage(
+                                  image: pickedImage!,
+                                  relativePath: 'profilePicture');
+                          onImageSelected!(imageFile, null);
                         }
                       } catch (e) {
                         if (onImageSelected != null) {

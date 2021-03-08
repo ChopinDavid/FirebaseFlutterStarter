@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_starter/models/routes.dart';
 import 'package:firebase_flutter_starter/models/string_validator.dart';
@@ -10,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:image_picker/image_picker.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -24,7 +25,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  PickedFile? _imageFile;
+  File? _imageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +60,10 @@ class _SignupPageState extends State<SignupPage> {
                             child: ProfilePicture(
                               file: _imageFile,
                               editable: true,
-                              onImageSelected: (pickedFile, error) {
-                                if (pickedFile != null) {
+                              onImageSelected: (file, error) {
+                                if (file != null) {
                                   setState(() {
-                                    _imageFile = pickedFile;
+                                    _imageFile = file;
                                   });
                                 }
                               },
@@ -138,6 +139,9 @@ class _SignupPageState extends State<SignupPage> {
                                       lastName: lastNameController.text,
                                       email: emailController.text,
                                       password: passwordController.text,
+                                      profilePicture: _imageFile != null
+                                          ? File(_imageFile!.path)
+                                          : null,
                                     ),
                                   );
                                 }
