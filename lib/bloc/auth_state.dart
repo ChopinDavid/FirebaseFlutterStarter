@@ -20,6 +20,6 @@ class AuthSignupComplete extends AuthState {
 }
 
 class AuthSignupError extends AuthState {
-  final FirebaseAuthException error;
+  final Exception error;
   AuthSignupError({required this.error});
 }

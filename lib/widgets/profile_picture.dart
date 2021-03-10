@@ -62,8 +62,8 @@ class ProfilePicture extends StatelessWidget {
                       if (onImageSelected != null) {
                         File? imageFile = await GetIt.instance
                             .get<DocumentService>()
-                            .saveImage(
-                                image: pickedImage!,
+                            .saveImageFromBytes(
+                                bytes: await pickedImage!.readAsBytes(),
                                 relativePath: 'profilePicture');
 
                         onImageSelected!(imageFile, null);

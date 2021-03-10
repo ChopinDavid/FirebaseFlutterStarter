@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/painting.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DocumentService {
@@ -13,11 +13,20 @@ class DocumentService {
     return filePath;
   }
 
-  Future<File> saveImage(
-      {required PickedFile image, required String relativePath}) async {
+  Future<FileSystemEntity?> deleteFile({required relativePath}) async {
+    final String path = await _getFilePath(relativePath: relativePath);
+    final File file = File(path);
+    if (await file.exists()) {
+      return file.delete();
+    }
+    return null;
+  }
+
+  Future<File> saveImageFromBytes(
+      {required Uint8List bytes, required String relativePath}) async {
     String path = await _getFilePath(relativePath: relativePath);
     imageCache!.clearLiveImages();
-    return await File(path).writeAsBytes(await image.readAsBytes());
+    return await File(path).writeAsBytes(bytes);
   }
 
   Future<File> getImage({required String relativePath}) async {
