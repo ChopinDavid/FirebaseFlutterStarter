@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_flutter_starter/models/firebase_flutter_starter_user.dart';
+import 'package:firebase_flutter_starter/services/shared_preferences_service.dart';
 import 'package:firebase_flutter_starter/services/storage_service.dart';
 import 'package:get_it/get_it.dart';
 
@@ -26,6 +27,11 @@ class FirestoreService {
         lastName: lastName,
         email: email,
         profilePictureUrl: _profilePictureDownloadUrl);
+
+    await GetIt.instance
+        .get<SharedPreferencesService>()
+        .storeCurrentUser(user: user);
+
     return await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)

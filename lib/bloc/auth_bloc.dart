@@ -7,6 +7,7 @@ import 'package:firebase_flutter_starter/models/firebase_flutter_starter_user.da
 import 'package:firebase_flutter_starter/services/document_service.dart';
 import 'package:firebase_flutter_starter/services/firestore_service.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
+import 'package:firebase_flutter_starter/services/shared_preferences_service.dart';
 import 'package:flutter/painting.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -33,6 +34,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               .get<FirestoreService>()
               .getUser(uid: userCredential.user!.uid);
           if (user != null) {
+            await GetIt.instance
+                .get<SharedPreferencesService>()
+                .storeCurrentUser(user: user);
             if (user.profilePictureUrl != null) {
               final http.Response response =
                   await http.get(Uri.parse(user!.profilePictureUrl!));
