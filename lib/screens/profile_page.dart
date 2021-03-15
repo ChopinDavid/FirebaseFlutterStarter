@@ -14,6 +14,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tuple/tuple.dart';
 
+import '../models/routes.dart';
+
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -82,16 +84,24 @@ class ProfilePage extends StatelessWidget {
                     }
                   },
                 ),
-                AwareButton(
-                  child: Text('Logout'),
-                  onPressed: () {
-                    _authBloc.add(
-                      SignOut(
-                        navigationService:
-                            GetIt.instance.get<NavigationService>(),
+                Column(
+                  children: [
+                    AwareButton(
+                      child: Text('Account Settings'),
+                      onPressed: () => GetIt.instance
+                          .get<NavigationService>()
+                          .pushNamed(Routes.ACCOUNTSETTINGS),
+                    ),
+                    AwareButton(
+                      child: Text('Logout'),
+                      onPressed: () => _authBloc.add(
+                        SignOut(
+                          navigationService:
+                              GetIt.instance.get<NavigationService>(),
+                        ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
               ],
             );

@@ -1,11 +1,12 @@
+import 'package:firebase_flutter_starter/screens/account_settings_page.dart';
 import 'package:firebase_flutter_starter/screens/login_page.dart';
 import 'package:firebase_flutter_starter/screens/signup_page.dart';
+import 'package:firebase_flutter_starter/screens/tab_bar.dart';
 import 'package:firebase_flutter_starter/screens/welcome_page.dart';
 import 'package:firebase_flutter_starter/widgets/image_source_overlay.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_flutter_starter/screens/tab_bar.dart';
 
 class Routes {
   static const String WELCOME = '/welcome';
@@ -13,6 +14,7 @@ class Routes {
   static const String SIGNUP = '/signup';
   static const String IMAGESOURCE = '/image_source';
   static const String TABBAR = '/tab_bar';
+  static const String ACCOUNTSETTINGS = '/account_settings';
 
   static Route<dynamic>? generateRoutes(
     BuildContext context,
@@ -38,6 +40,10 @@ class Routes {
       case TABBAR:
         return MaterialPageRoute(builder: (_) {
           return HugTabBar();
+        });
+      case ACCOUNTSETTINGS:
+        return MaterialPageRoute(builder: (_) {
+          return AccountSettingsPage();
         });
     }
   }

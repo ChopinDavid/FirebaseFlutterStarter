@@ -48,4 +48,11 @@ class FirestoreService {
     }
     return null;
   }
+
+  Future<void> deleteUser({required uid}) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .delete();
+  }
 }
