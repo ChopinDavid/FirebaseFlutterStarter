@@ -1,4 +1,4 @@
-package com.allcapssoftware.firebase_flutter_starter
+package com.yourname.firebase_flutter_starter
 
 import io.flutter.embedding.android.FlutterActivity
 
