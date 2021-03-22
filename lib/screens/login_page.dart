@@ -90,8 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                     BackdropWidget(
                       child: AwareAlertDialog(
                         title: Text('Error'),
-                        content:
-                            Text(state.error.toString() ?? 'Unknown error'),
+                        content: Text(state.error.toString()),
                         actions: <Widget>[
                           AwareButton(
                             child: Text('Ok'),

@@ -39,7 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 .storeCurrentUser(user: user);
             if (user.profilePictureUrl != null) {
               final http.Response response =
-                  await http.get(Uri.parse(user!.profilePictureUrl!));
+                  await http.get(Uri.parse(user.profilePictureUrl!));
               await GetIt.instance.get<DocumentService>().saveImageFromBytes(
                   bytes: response.bodyBytes, relativePath: 'profilePicture');
             }

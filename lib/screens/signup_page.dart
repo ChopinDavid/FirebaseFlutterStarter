@@ -157,8 +157,7 @@ class _SignupPageState extends State<SignupPage> {
                     BackdropWidget(
                       child: AwareAlertDialog(
                         title: Text('Error'),
-                        content:
-                            Text(state.error.toString() ?? 'Unknown error'),
+                        content: Text(state.error.toString()),
                         actions: <Widget>[
                           AwareButton(
                             child: Text('Ok'),
