@@ -55,4 +55,17 @@ class FirestoreService {
         .doc(uid)
         .delete();
   }
+
+  Future<void> updateUserProfilePicture(
+      {required String uid, required File profilePicture}) async {
+    String _profilePictureDownloadUrl = await GetIt.instance
+        .get<StorageService>()
+        .uploadImage(image: profilePicture, path: uid)
+        .then((snapshot) => snapshot.ref.getDownloadURL());
+
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'profilePictureUrl': _profilePictureDownloadUrl});
+  }
 }

@@ -33,7 +33,11 @@ class _HugTabBarState extends State<HugTabBar> {
   List<Widget> _createWidgetsForTabs() {
     return [
       HomePage(),
-      ProfilePage(),
+      ProfilePage(
+        onProfilePictureUpdated: () {
+          setState(() {});
+        },
+      ),
     ];
   }
 

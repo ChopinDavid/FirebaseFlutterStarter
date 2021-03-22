@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_starter/models/firebase_flutter_starter_user.dart';
 import 'package:firebase_flutter_starter/services/document_service.dart';
+import 'package:firebase_flutter_starter/services/firestore_service.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:firebase_flutter_starter/services/shared_preferences_service.dart';
 import 'package:firebase_flutter_starter/widgets/aware_button.dart';
@@ -17,6 +18,9 @@ import 'package:tuple/tuple.dart';
 import '../models/routes.dart';
 
 class ProfilePage extends StatelessWidget {
+  final VoidCallback onProfilePictureUpdated;
+  ProfilePage({required this.onProfilePictureUpdated});
+
   @override
   Widget build(BuildContext context) {
     final AuthBloc _authBloc = AuthBloc();
@@ -80,6 +84,25 @@ class ProfilePage extends StatelessWidget {
                             file: snapshot.data!.item2
                                 ? snapshot.data!.item1
                                 : null,
+                            editable: true,
+                            onImageSelected: (file, error) {
+                              onProfilePictureUpdated();
+                              if (file != null) {
+                                GetIt.instance
+                                    .get<SharedPreferencesService>()
+                                    .getCurrentUser()
+                                    .then((user) {
+                                  if (user != null) {
+                                    return GetIt.instance
+                                        .get<FirestoreService>()
+                                        .updateUserProfilePicture(
+                                            uid: user.uid,
+                                            profilePicture: file);
+                                  }
+                                  throw Exception('Unable to get user');
+                                });
+                              }
+                            },
                           );
                     }
                   },
