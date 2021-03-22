@@ -21,5 +21,5 @@ service cloud.firestore {
  4. [Enable Firebase Authentication](https://firebase.google.com/docs/auth) in your Firebase project.
  5. Enable the *Email/Password* sign-in method in Firebase Authentication.
  ![Enabling Email/Password sign-in](https://raw.githubusercontent.com/ChopinDavid/FirebaseFlutterStarter/master/readmeImage1.png)
- 6. Follow these articles to drop the [GoogleService-Info.plist](https://firebase.google.com/docs/ios/setup) and [GoogleService-Info.json](https://firebase.google.com/docs/android/setup) into the iOS and Android projects, respectively. **Be sure to ignore the steps about editing your podfile and running pod install.**
+ 6. Follow these articles to drop the [GoogleService-Info.plist](https://firebase.google.com/docs/ios/setup) and [GoogleService-Info.json](https://firebase.google.com/docs/android/setup) into the iOS and Android projects, respectively. **Be sure to ignore the steps about editing your podfile and running pod install. Also be sure that your iOS project's bundle identifier and Android project's application ID match what is registered with the Firebase iOS and Android projects, respectively.**
  7. Run `flutter pub get` in your root (the level where `pubspec.yaml` is located).
