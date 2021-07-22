@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "405298421821",
+    "project_id": "ibarter-d395a",
+    "storage_bucket": "ibarter-d395a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405298421821:android:831fa723550c754a238a54",
+        "android_client_info": {
+          "package_name": "com.tolstoytechnologies.ibarter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405298421821-e5q79ft6a0jptgcf5sd1bi7pcnm09th2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfpsw9X7UvXY2tCMw_KakyeLzDReSM8oI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405298421821-e5q79ft6a0jptgcf5sd1bi7pcnm09th2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "405298421821-a4votvqecck7n4454ehmkuf5l5au70ga.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tolstoytechnologies.ibarter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
