@@ -167,16 +167,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text('We need photo access for that...'),
                   content: Text(Platform.isIOS
                       ? "To set a profile picture, we're gonna need access to your photos. This can be done via the Settings app."
-                      : 'TODO: Specify the content text for when a user has denied photo access and they are trying to upload a profile picture.'),
+                      : "To set a profile picture, we're gonna need access to your photos. This can be granted via the Settings app by clicking on the \"Permissions\" button."),
                   actions: <Widget>[
                     AwareButton(
                       child: Text('Settings'),
-                      onPressed: Platform.isIOS
-                          ? AppSettings.openAppSettings
-                          : () {
-                              print(
-                                  'TODO: Implement what happens when the Android user has denied photo access and they are trying to upload a profile picture.');
-                            },
+                      onPressed: AppSettings.openAppSettings,
                     ),
                     AwareButton(
                       child: Text('Cancel'),
