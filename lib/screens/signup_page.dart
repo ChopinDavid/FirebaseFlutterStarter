@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_starter/models/routes.dart';
 import 'package:firebase_flutter_starter/models/string_validator.dart';
@@ -26,6 +27,8 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController passwordController = TextEditingController();
 
   File? _imageFile;
+
+  bool isDisplayingOnImageSelectedError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +69,11 @@ class _SignupPageState extends State<SignupPage> {
                                     _imageFile = file;
                                   });
                                 }
+                              },
+                              onImageSelectedError: () {
+                                setState(() {
+                                  isDisplayingOnImageSelectedError = true;
+                                });
                               },
                             ),
                           ),
@@ -172,6 +180,34 @@ class _SignupPageState extends State<SignupPage> {
                     BackdropWidget(
                       child: Center(
                         child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  if (isDisplayingOnImageSelectedError)
+                    BackdropWidget(
+                      child: AwareAlertDialog(
+                        title: Text('We need photo access for that...'),
+                        content: Text(Platform.isIOS
+                            ? "To set a profile picture, we're gonna need access to your photos. This can be done via the Settings app."
+                            : 'TODO: Specify the content text for when a user has denied photo access and they are trying to upload a profile picture.'),
+                        actions: <Widget>[
+                          AwareButton(
+                            child: Text('Settings'),
+                            onPressed: Platform.isIOS
+                                ? AppSettings.openAppSettings
+                                : () {
+                                    print(
+                                        'TODO: Implement what happens when the Android user has denied photo access and they are trying to upload a profile picture.');
+                                  },
+                          ),
+                          AwareButton(
+                            child: Text('Cancel'),
+                            onPressed: () {
+                              setState(() {
+                                isDisplayingOnImageSelectedError = false;
+                              });
+                            },
+                          ),
+                        ],
                       ),
                     ),
                 ],

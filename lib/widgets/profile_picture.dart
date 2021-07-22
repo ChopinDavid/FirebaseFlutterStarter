@@ -12,10 +12,15 @@ class ProfilePicture extends StatelessWidget {
   final bool editable;
   final String? url;
   final File? file;
-  final Function(File?, dynamic?)? onImageSelected;
+  final Function(File?, dynamic)? onImageSelected;
+  final Function()? onImageSelectedError;
 
   ProfilePicture(
-      {this.editable = false, this.url, this.file, this.onImageSelected});
+      {this.editable = false,
+      this.url,
+      this.file,
+      this.onImageSelected,
+      this.onImageSelectedError});
 
   final ImagePicker _picker = ImagePicker();
 
@@ -56,17 +61,23 @@ class ProfilePicture extends StatelessWidget {
                         .get<NavigationService>()
                         .pushNamed(Routes.IMAGESOURCE,
                             arguments: (ImageSource imageSource) async {
-                      final pickedImage = await _picker.getImage(
-                        source: imageSource,
-                      );
-                      if (onImageSelected != null) {
-                        File? imageFile = await GetIt.instance
-                            .get<DocumentService>()
-                            .saveImageFromBytes(
-                                bytes: await pickedImage!.readAsBytes(),
-                                relativePath: 'profilePicture');
+                      try {
+                        final pickedImage = await _picker.getImage(
+                          source: imageSource,
+                        );
+                        if (onImageSelected != null) {
+                          File? imageFile = await GetIt.instance
+                              .get<DocumentService>()
+                              .saveImageFromBytes(
+                                  bytes: await pickedImage!.readAsBytes(),
+                                  relativePath: 'profilePicture');
 
-                        onImageSelected!(imageFile, null);
+                          onImageSelected!(imageFile, null);
+                        }
+                      } catch (_) {
+                        if (onImageSelectedError != null) {
+                          onImageSelectedError!();
+                        }
                       }
                     });
                   },
