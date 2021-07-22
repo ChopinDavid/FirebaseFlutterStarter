@@ -5,57 +5,30 @@ import 'package:firebase_flutter_starter/screens/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Create the initialization Future outside of `build`:
+  final FirebaseApp _initialization = await Firebase.initializeApp();
   DependencyConfiguration.setUp();
-  runApp(MyApp());
+  runApp(MyApp(
+    initialization: _initialization,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  // Create the initialization Future outside of `build`:
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
+  final FirebaseApp initialization;
+  MyApp({required this.initialization});
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      // Initialize FlutterFire:
-      future: _initialization,
-      builder: (context, snapshot) {
-        Widget homeWidget;
-        // Check for errors
-        if (snapshot.hasError) {
-          homeWidget = Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: Text(
-                snapshot.error.toString(),
-              ),
-            ),
-          );
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          // Once complete, show your application
-          homeWidget = WelcomePage();
-        } else {
-          // Otherwise, show something whilst waiting for initialization to complete
-          homeWidget = Container(
-            color: Colors.green,
-          );
-        }
-
-        return MaterialApp(
-          title: 'Flutter Demo',
-          navigatorKey: GetIt.instance<GlobalKey<NavigatorState>>(),
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: homeWidget,
-          onGenerateRoute: (settings) =>
-              Routes.generateRoutes(context, settings),
-        );
-      },
+    return MaterialApp(
+      title: 'Flutter Demo',
+      navigatorKey: GetIt.instance<GlobalKey<NavigatorState>>(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: WelcomePage(),
+      onGenerateRoute: (settings) => Routes.generateRoutes(context, settings),
     );
   }
 }

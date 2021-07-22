@@ -16,6 +16,8 @@ import 'package:meta/meta.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
+final FirebaseAuth _auth = GetIt.instance.get<FirebaseAuth>();
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial());
 
@@ -26,8 +28,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is LoginUserWithEmailAndPassword) {
       yield AuthLoading();
       try {
-        final UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
+        final UserCredential userCredential =
+            await _auth.signInWithEmailAndPassword(
                 email: event.email, password: event.password);
         if (userCredential.user != null) {
           final FirebaseFlutterStarterUser? user = await GetIt.instance
@@ -55,8 +57,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else if (event is SignupUserWithEmailAndPassword) {
       yield AuthLoading();
       try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
                 email: event.email, password: event.password);
         await GetIt.instance.get<FirestoreService>().createUser(
               uid: userCredential.user!.uid,
@@ -72,7 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else if (event is ResetAuthState) {
       yield AuthInitial();
     } else if (event is SignOut) {
-      await FirebaseAuth.instance.signOut();
+      await _auth.signOut();
       imageCache!.clear();
       imageCache!.clearLiveImages();
       await GetIt.instance

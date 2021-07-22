@@ -14,7 +14,7 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
-    if (FirebaseAuth.instance.currentUser != null) {
+    if (GetIt.instance.get<FirebaseAuth>().currentUser != null) {
       final navigationService = GetIt.instance.get<NavigationService>();
       SchedulerBinding.instance?.addPostFrameCallback(
           (_) => navigationService.pushNamed(Routes.TABBAR));
@@ -32,6 +32,7 @@ class _WelcomePageState extends State<WelcomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AwareButton(
+              key: Key('login-key'),
               child: Text('Login'),
               onPressed: () {
                 final navigationService =
@@ -40,6 +41,7 @@ class _WelcomePageState extends State<WelcomePage> {
               },
             ),
             AwareButton(
+              key: Key('signup-key'),
               child: Text('Signup'),
               onPressed: () {
                 final navigationService =

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_flutter_starter/services/document_service.dart';
 import 'package:firebase_flutter_starter/services/firestore_service.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
@@ -18,5 +19,6 @@ class DependencyConfiguration {
     getIt.registerSingleton<DocumentService>(DocumentService());
     getIt.registerSingleton<SharedPreferencesService>(
         SharedPreferencesService());
+    getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
   }
 }

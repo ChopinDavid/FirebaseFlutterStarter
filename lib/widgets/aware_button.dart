@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 class AwareButton extends StatelessWidget {
   final Widget child;
   final VoidCallback onPressed;
-  AwareButton({required this.child, required this.onPressed});
+  AwareButton({required this.child, required this.onPressed, Key? key})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
