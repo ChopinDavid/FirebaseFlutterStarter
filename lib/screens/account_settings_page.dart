@@ -15,7 +15,7 @@ class AccountSettingsPage extends StatefulWidget {
 }
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
-  bool isPasswordPromptDiplayed = false;
+  bool isPasswordPromptDisplayed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,17 +30,17 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                 child: Text('Delete Account'),
                 onPressed: () {
                   setState(() {
-                    isPasswordPromptDiplayed = true;
+                    isPasswordPromptDisplayed = true;
                   });
                 },
               )
             ],
           ),
-          if (isPasswordPromptDiplayed)
+          if (isPasswordPromptDisplayed)
             UserPasswordPrompt(
               onCancelled: () {
                 setState(() {
-                  isPasswordPromptDiplayed = false;
+                  isPasswordPromptDisplayed = false;
                 });
               },
             )
@@ -53,9 +53,10 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 class UserPasswordPrompt extends StatelessWidget {
   final VoidCallback? onCancelled;
   UserPasswordPrompt({this.onCancelled});
+  final AccountDeletionBloc _accountDeletionBloc = AccountDeletionBloc();
+
   @override
   Widget build(BuildContext context) {
-    final AccountDeletionBloc _accountDeletionBloc = AccountDeletionBloc();
     final TextEditingController _textFieldController = TextEditingController();
     final NavigationService _navigationService =
         GetIt.instance.get<NavigationService>();

@@ -20,10 +20,10 @@ import '../models/routes.dart';
 class ProfilePage extends StatelessWidget {
   final VoidCallback onProfilePictureUpdated;
   ProfilePage({required this.onProfilePictureUpdated});
+  final AuthBloc _authBloc = AuthBloc();
 
   @override
   Widget build(BuildContext context) {
-    final AuthBloc _authBloc = AuthBloc();
     return BlocProvider<AuthBloc>(
       create: (_) => _authBloc,
       child: Scaffold(
