@@ -80,6 +80,7 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 40),
                           Text('First Name'),
                           TextFormField(
+                            key: Key('first-name-field'),
                             controller: firstNameController,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.words,
@@ -93,6 +94,7 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 40),
                           Text('Last Name'),
                           TextFormField(
+                            key: Key('last-name-field'),
                             controller: lastNameController,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.words,
@@ -106,6 +108,7 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 40),
                           Text('Email'),
                           TextFormField(
+                            key: Key('email-field'),
                             controller: emailController,
                             autocorrect: false,
                             keyboardType: TextInputType.emailAddress,
@@ -116,6 +119,7 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 40),
                           Text('Password'),
                           TextFormField(
+                            key: Key('password-field'),
                             controller: passwordController,
                             autocorrect: false,
                             validator: (password) {
@@ -126,6 +130,7 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 40),
                           Text('Confirm Password'),
                           TextFormField(
+                            key: Key('confirm-password-field'),
                             autocorrect: false,
                             validator: (confirmPassword) {
                               if (confirmPassword != passwordController.text) {
@@ -138,6 +143,7 @@ class _SignupPageState extends State<SignupPage> {
                           SizedBox(height: 40),
                           Center(
                             child: AwareButton(
+                              key: Key('signup-button-key'),
                               onPressed: () {
                                 if (_formKey.currentState?.validate() ??
                                     false) {

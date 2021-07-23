@@ -41,7 +41,7 @@ class _WelcomePageState extends State<WelcomePage> {
               },
             ),
             AwareButton(
-              key: Key('signup-key'),
+              key: Key('signup-button-key'),
               child: Text('Signup'),
               onPressed: () {
                 final navigationService =

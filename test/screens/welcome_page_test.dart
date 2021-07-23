@@ -46,7 +46,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: WelcomePage()));
 
-      await tester.tap(find.byKey(Key('signup-key')));
+      await tester.tap(find.byKey(Key('signup-button-key')));
 
       verify(() => mockNavigationService.pushNamed(Routes.SIGNUP));
     });
