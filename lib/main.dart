@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Create the initialization Future outside of `build`:
   final FirebaseApp _initialization = await Firebase.initializeApp();
-  DependencyConfiguration.setUp();
+  await DependencyConfiguration.setUp();
   runApp(MyApp(
     initialization: _initialization,
   ));

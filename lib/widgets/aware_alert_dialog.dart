@@ -13,7 +13,9 @@ class AwareAlertDialog extends StatelessWidget {
       {this.title,
       this.content,
       this.actions = const [],
-      this.iOSActionSheetEnabled = false});
+      this.iOSActionSheetEnabled = false,
+      Key? key})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) {

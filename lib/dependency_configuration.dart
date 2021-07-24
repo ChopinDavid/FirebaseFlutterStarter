@@ -6,9 +6,10 @@ import 'package:firebase_flutter_starter/services/shared_preferences_service.dar
 import 'package:firebase_flutter_starter/services/storage_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DependencyConfiguration {
-  static void setUp() {
+  static Future<void> setUp() async {
     final GetIt getIt = GetIt.instance;
     getIt.registerSingleton<GlobalKey<NavigatorState>>(
         GlobalKey<NavigatorState>());
@@ -20,5 +21,8 @@ class DependencyConfiguration {
     getIt.registerSingleton<SharedPreferencesService>(
         SharedPreferencesService());
     getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
+    getIt.registerSingleton<SharedPreferences>(
+        await SharedPreferences.getInstance());
+    return;
   }
 }

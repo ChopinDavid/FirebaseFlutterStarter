@@ -51,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Text('Email'),
                           TextFormField(
+                            key: Key('email-field'),
                             controller: emailController,
                             autocorrect: false,
                             keyboardType: TextInputType.emailAddress,
@@ -61,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(height: 40),
                           Text('Password'),
                           TextFormField(
+                            key: Key('password-field'),
                             controller: passwordController,
                             autocorrect: false,
                             obscureText: true,
@@ -68,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(height: 40),
                           Center(
                             child: AwareButton(
+                              key: Key('login-button-key'),
                               onPressed: () {
                                 if (_formKey.currentState?.validate() ??
                                     false) {
@@ -89,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                   if (state is AuthSignupError)
                     BackdropWidget(
                       child: AwareAlertDialog(
+                        key: Key('error-dialog'),
                         title: Text('Error'),
                         content: Text(state.error.toString()),
                         actions: <Widget>[

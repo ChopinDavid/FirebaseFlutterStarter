@@ -1,12 +1,17 @@
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_flutter_starter/models/firebase_flutter_starter_user.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+
+import 'test_data.dart' as testData;
 
 typedef Callback(MethodCall call);
 
 class TestUtils {
   static void registerFallbacks() {
-    // registerFallbackValue<AtcAuthResult>(testData.atcAuthResult());
+    registerFallbackValue<FirebaseFlutterStarterUser>(
+        testData.firebaseFlutterStarterUser());
   }
 
   static void setupCloudFirestoreMocks([Callback? customHandlers]) {
