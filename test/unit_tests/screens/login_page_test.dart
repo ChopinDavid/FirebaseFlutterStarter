@@ -11,9 +11,9 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../mocks.dart';
-import '../test_data.dart' as testData;
-import '../test_utils.dart';
+import '../../mocks.dart';
+import '../../test_data.dart' as testData;
+import '../../test_utils.dart';
 
 void main() {
   late NavigationService mockNavigationService;
