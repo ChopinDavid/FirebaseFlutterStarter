@@ -1,6 +1,9 @@
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_starter/models/firebase_flutter_starter_user.dart';
+import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -12,6 +15,11 @@ class TestUtils {
   static void registerFallbacks() {
     registerFallbackValue<FirebaseFlutterStarterUser>(
         testData.firebaseFlutterStarterUser());
+    registerFallbackValue<AuthState>(AuthInitial());
+    registerFallbackValue<AuthEvent>(LoginUserWithEmailAndPassword(
+        email: 'leo@tolstoy.com', password: 'Novels9@'));
+    registerFallbackValue<NavigationService>(
+        NavigationService(navKey: GlobalKey<NavigatorState>()));
   }
 
   static void setupCloudFirestoreMocks([Callback? customHandlers]) {
