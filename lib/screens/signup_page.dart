@@ -7,7 +7,6 @@ import 'package:firebase_flutter_starter/models/string_validator.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:firebase_flutter_starter/widgets/aware_alert_dialog.dart';
 import 'package:firebase_flutter_starter/widgets/aware_button.dart';
-import 'package:firebase_flutter_starter/widgets/backdrop_widget.dart';
 import 'package:firebase_flutter_starter/widgets/profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -28,8 +27,6 @@ class _SignupPageState extends State<SignupPage> {
 
   File? _imageFile;
 
-  bool isDisplayingOnImageSelectedError = false;
-
   @override
   Widget build(BuildContext context) {
     final AuthBloc _authBloc = AuthBloc();
@@ -37,7 +34,34 @@ class _SignupPageState extends State<SignupPage> {
       appBar: AppBar(
         title: Text('Signup'),
       ),
-      body: BlocBuilder<AuthBloc, AuthState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthSignupError) {
+              showDialog(
+                context: context,
+                builder: (context) => AwareAlertDialog(
+                  title: Text('Error'),
+                  content: Text(state.error.toString()),
+                  actions: <Widget>[
+                    AwareButton(
+                      child: Text('Ok'),
+                      onPressed: () {
+                        _authBloc.add(ResetAuthState());
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            if (state is AuthLoading) {
+              showDialog(
+                context: context,
+                builder: (context) =>
+                    Center(child: CircularProgressIndicator()),
+              );
+            }
+          },
           bloc: _authBloc,
           builder: (scaffoldContext, state) {
             if (state is AuthSignupComplete) {
@@ -71,9 +95,27 @@ class _SignupPageState extends State<SignupPage> {
                                 }
                               },
                               onImageSelectedError: () {
-                                setState(() {
-                                  isDisplayingOnImageSelectedError = true;
-                                });
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AwareAlertDialog(
+                                    title: Text(
+                                        'We need photo access for that...'),
+                                    content: Text(Platform.isIOS
+                                        ? "To set a profile picture, we're gonna need access to your photos. This can be granted via the Settings app."
+                                        : "To set a profile picture, we're gonna need access to your photos. This can be granted via the Settings app by clicking on the \"Permissions\" button."),
+                                    actions: <Widget>[
+                                      AwareButton(
+                                        child: Text('Settings'),
+                                        onPressed: AppSettings.openAppSettings,
+                                      ),
+                                      AwareButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               },
                             ),
                           ),
@@ -167,50 +209,6 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ),
                   ),
-                  if (state is AuthSignupError)
-                    BackdropWidget(
-                      child: AwareAlertDialog(
-                        title: Text('Error'),
-                        content: Text(state.error.toString()),
-                        actions: <Widget>[
-                          AwareButton(
-                            child: Text('Ok'),
-                            onPressed: () {
-                              _authBloc.add(ResetAuthState());
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (state is AuthLoading)
-                    BackdropWidget(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  if (isDisplayingOnImageSelectedError)
-                    BackdropWidget(
-                      child: AwareAlertDialog(
-                        title: Text('We need photo access for that...'),
-                        content: Text(Platform.isIOS
-                            ? "To set a profile picture, we're gonna need access to your photos. This can be granted via the Settings app."
-                            : "To set a profile picture, we're gonna need access to your photos. This can be granted via the Settings app by clicking on the \"Permissions\" button."),
-                        actions: <Widget>[
-                          AwareButton(
-                            child: Text('Settings'),
-                            onPressed: AppSettings.openAppSettings,
-                          ),
-                          AwareButton(
-                            child: Text('Cancel'),
-                            onPressed: () {
-                              setState(() {
-                                isDisplayingOnImageSelectedError = false;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
                 ],
               ),
             );

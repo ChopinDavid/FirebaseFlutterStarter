@@ -4,7 +4,6 @@ import 'package:firebase_flutter_starter/models/string_validator.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:firebase_flutter_starter/widgets/aware_alert_dialog.dart';
 import 'package:firebase_flutter_starter/widgets/aware_button.dart';
-import 'package:firebase_flutter_starter/widgets/backdrop_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,15 +18,45 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final AuthBloc _authBloc = AuthBloc();
 
   @override
   Widget build(BuildContext context) {
-    final AuthBloc _authBloc = AuthBloc();
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: BlocBuilder<AuthBloc, AuthState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthSignupError) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AwareAlertDialog(
+                      key: Key('error-dialog'),
+                      title: Text('Error'),
+                      content: Text(state.error.toString()),
+                      actions: <Widget>[
+                        AwareButton(
+                          child: Text('Ok'),
+                          onPressed: () {
+                            _authBloc.add(ResetAuthState());
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  });
+
+              if (state is AuthLoading) {
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      Center(child: CircularProgressIndicator()),
+                );
+              }
+            }
+          },
           bloc: _authBloc,
           builder: (scaffoldContext, state) {
             if (state is AuthLoginComplete) {
@@ -89,28 +118,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  if (state is AuthSignupError)
-                    BackdropWidget(
-                      child: AwareAlertDialog(
-                        key: Key('error-dialog'),
-                        title: Text('Error'),
-                        content: Text(state.error.toString()),
-                        actions: <Widget>[
-                          AwareButton(
-                            child: Text('Ok'),
-                            onPressed: () {
-                              _authBloc.add(ResetAuthState());
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (state is AuthLoading)
-                    BackdropWidget(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
                 ],
               ),
             );

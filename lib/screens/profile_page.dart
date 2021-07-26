@@ -10,7 +10,6 @@ import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:firebase_flutter_starter/services/shared_preferences_service.dart';
 import 'package:firebase_flutter_starter/widgets/aware_alert_dialog.dart';
 import 'package:firebase_flutter_starter/widgets/aware_button.dart';
-import 'package:firebase_flutter_starter/widgets/backdrop_widget.dart';
 import 'package:firebase_flutter_starter/widgets/profile_picture.dart';
 import 'package:firebase_flutter_starter/widgets/skeleton_widget.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +29,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final AuthBloc _authBloc = AuthBloc();
-
-  bool isDisplayingOnImageSelectedError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +115,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                   }
                                 },
                                 onImageSelectedError: () {
-                                  setState(() {
-                                    isDisplayingOnImageSelectedError = true;
-                                  });
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => AwareAlertDialog(
+                                      title: Text(
+                                          'We need photo access for that...'),
+                                      content: Text(Platform.isIOS
+                                          ? "To set a profile picture, we're gonna need access to your photos. This can be done via the Settings app."
+                                          : "To set a profile picture, we're gonna need access to your photos. This can be granted via the Settings app by clicking on the \"Permissions\" button."),
+                                      actions: <Widget>[
+                                        AwareButton(
+                                          child: Text('Settings'),
+                                          onPressed:
+                                              AppSettings.openAppSettings,
+                                        ),
+                                        AwareButton(
+                                          child: Text('Cancel'),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 },
                               );
                         }
@@ -161,29 +177,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 );
               },
             ),
-            if (isDisplayingOnImageSelectedError)
-              BackdropWidget(
-                child: AwareAlertDialog(
-                  title: Text('We need photo access for that...'),
-                  content: Text(Platform.isIOS
-                      ? "To set a profile picture, we're gonna need access to your photos. This can be done via the Settings app."
-                      : "To set a profile picture, we're gonna need access to your photos. This can be granted via the Settings app by clicking on the \"Permissions\" button."),
-                  actions: <Widget>[
-                    AwareButton(
-                      child: Text('Settings'),
-                      onPressed: AppSettings.openAppSettings,
-                    ),
-                    AwareButton(
-                      child: Text('Cancel'),
-                      onPressed: () {
-                        setState(() {
-                          isDisplayingOnImageSelectedError = false;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
           ],
         ),
       ),
