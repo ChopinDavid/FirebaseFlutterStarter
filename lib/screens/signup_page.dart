@@ -35,9 +35,10 @@ class _SignupPageState extends State<SignupPage> {
         title: Text('Signup'),
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is AuthSignupError) {
-              showDialog(
+              Navigator.of(context).pop();
+              await showDialog(
                 context: context,
                 builder: (context) => AwareAlertDialog(
                   title: Text('Error'),
@@ -47,11 +48,13 @@ class _SignupPageState extends State<SignupPage> {
                       child: Text('Ok'),
                       onPressed: () {
                         _authBloc.add(ResetAuthState());
+                        Navigator.of(context).pop();
                       },
                     ),
                   ],
                 ),
               );
+              _authBloc.add(ResetAuthState());
             }
 
             if (state is AuthLoading) {

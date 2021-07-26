@@ -27,9 +27,10 @@ class _LoginPageState extends State<LoginPage> {
         title: Text('Login'),
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is AuthSignupError) {
-              showDialog(
+              Navigator.of(context).pop();
+              await showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AwareAlertDialog(
@@ -47,14 +48,15 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     );
                   });
+              _authBloc.add(ResetAuthState());
+            }
 
-              if (state is AuthLoading) {
-                showDialog(
-                  context: context,
-                  builder: (context) =>
-                      Center(child: CircularProgressIndicator()),
-                );
-              }
+            if (state is AuthLoading) {
+              showDialog(
+                context: context,
+                builder: (context) =>
+                    Center(child: CircularProgressIndicator()),
+              );
             }
           },
           bloc: _authBloc,
