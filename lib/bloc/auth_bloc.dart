@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_flutter_starter/models/firebase_flutter_starter_user.dart';
 import 'package:firebase_flutter_starter/services/document_service.dart';

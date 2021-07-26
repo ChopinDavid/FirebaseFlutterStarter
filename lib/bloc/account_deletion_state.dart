@@ -1,7 +1,10 @@
 part of 'account_deletion_bloc.dart';
 
 @immutable
-abstract class AccountDeletionState {}
+abstract class AccountDeletionState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
 class AccountDeletionInitial extends AccountDeletionState {}
 
@@ -10,6 +13,11 @@ class AccountDeletionLoading extends AccountDeletionState {}
 class AccountDeletionError extends AccountDeletionState {
   final Exception error;
   AccountDeletionError({required this.error});
+
+  @override
+  List<Object?> get props => [
+        error,
+      ];
 }
 
 class AccountDeletionNeedsToReauthenticate extends AccountDeletionError {
