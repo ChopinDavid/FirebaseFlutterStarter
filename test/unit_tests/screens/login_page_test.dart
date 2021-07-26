@@ -1,26 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_starter/models/routes.dart';
 import 'package:firebase_flutter_starter/screens/login_page.dart';
-import 'package:firebase_flutter_starter/services/firestore_service.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
-import 'package:firebase_flutter_starter/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../mocks.dart';
-import '../../test_data.dart' as testData;
 import '../../test_utils.dart';
 
 void main() {
+  late AuthBloc mockAuthBloc;
   late NavigationService mockNavigationService;
-  late FirebaseAuth mockFirebaseAuth;
-  late FirestoreService mockFirestoreService;
-  late SharedPreferencesService mockSharedPreferencesService;
-  late SharedPreferences mockSharedPreferences;
 
   setUpAll(() async {
     TestUtils.setupCloudFirestoreMocks();
@@ -31,41 +26,23 @@ void main() {
   setUp(() async {
     await GetIt.instance.reset();
 
+    mockAuthBloc = MockAuthBloc();
     mockNavigationService = MockNavigationService();
-    mockFirebaseAuth = MockFirebaseAuth();
-    mockFirestoreService = MockFirestoreService();
-    mockSharedPreferencesService = MockSharedPreferencesService();
-    mockSharedPreferences = MockSharedPreferences();
-
-    User mockUser = MockUser();
-    UserCredential mockUserCredential = MockUserCredential();
-    when(() => mockUser.uid).thenReturn('123');
-    when(() => mockUserCredential.user).thenReturn(mockUser);
-
-    when(() => mockFirebaseAuth.signInWithEmailAndPassword(
-            email: any(named: 'email'), password: any(named: 'password')))
-        .thenAnswer((invocation) async => mockUserCredential);
-
-    when(() => mockFirestoreService.getUser(uid: any(named: 'uid')))
-        .thenAnswer((invocation) async => MockFirebaseFlutterStarterUser());
-
-    when(() => mockSharedPreferencesService.storeCurrentUser(
-        user: any(named: 'user'))).thenAnswer((invocation) async => true);
 
     GetIt.instance.registerSingleton<NavigationService>(mockNavigationService);
-    GetIt.instance.registerSingleton<FirebaseAuth>(mockFirebaseAuth);
-    GetIt.instance.registerSingleton<FirestoreService>(mockFirestoreService);
-    GetIt.instance.registerSingleton<SharedPreferencesService>(
-        mockSharedPreferencesService);
-    GetIt.instance.registerSingleton<SharedPreferences>(mockSharedPreferences);
   });
 
   group('Form validation', () {
+    setUp(() {
+      when(() => mockAuthBloc.state).thenReturn(AuthInitial());
+    });
     group('Email field', () {
       testWidgets(
           'Shows "Please enter an email address..." if the user fails to enter an email address and clicks on the "Login" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: LoginPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: LoginPage())));
 
         final Finder loginButtonFinder = find.byKey(Key('login-button-key'));
         await tester.ensureVisible(loginButtonFinder);
@@ -79,7 +56,9 @@ void main() {
       testWidgets(
           'Shows "Please enter a valid email address..." if the user fails to enter an email address and clicks on the "Login" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: LoginPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: LoginPage())));
 
         await tester.enterText(
             find.byKey(Key('email-field')), 'leo!tolstoy.com');
@@ -97,7 +76,9 @@ void main() {
       testWidgets(
           'Does not show "Please enter an email address..." or "Please enter a valid email address..." if the user enters a valid email address and clicks on the "Login" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: LoginPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: LoginPage())));
 
         await tester.enterText(
             find.byKey(Key('email-field')), 'leo@tolstoy.com');
@@ -118,7 +99,15 @@ void main() {
   group('Login button', () {
     testWidgets('Successfully logging in pushes the home screen',
         (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: LoginPage()));
+      whenListen(
+          mockAuthBloc,
+          Stream.fromIterable(
+              [AuthLoginComplete(userCredential: MockUserCredential())]),
+          initialState: AuthInitial());
+
+      await tester.pumpWidget(MaterialApp(
+          home: BlocProvider<AuthBloc>(
+              create: (context) => mockAuthBloc, child: LoginPage())));
 
       await tester.enterText(find.byKey(Key('email-field')), 'leo@tolstoy.com');
       await tester.enterText(find.byKey(Key('password-field')), 'Novels9@');
@@ -131,21 +120,17 @@ void main() {
       verify(() => mockNavigationService.pushNamed(Routes.TABBAR));
     });
 
-    testWidgets('Unsuccessfully logging in displays',
+    testWidgets('Unsuccessfully logging in displays error dialog',
         (WidgetTester tester) async {
-      when(() => mockFirestoreService.getUser(
-            uid: any(named: 'uid'),
-          )).thenThrow(testData.firebaseAuthException());
+      whenListen(mockAuthBloc,
+          Stream.fromIterable([AuthSignupError(error: Exception())]),
+          initialState: AuthInitial());
 
-      await tester.pumpWidget(MaterialApp(home: LoginPage()));
+      await tester.pumpWidget(MaterialApp(
+          home: BlocProvider<AuthBloc>(
+              create: (context) => mockAuthBloc, child: LoginPage())));
 
-      await tester.enterText(find.byKey(Key('email-field')), 'leo@tolstoy.com');
-      await tester.enterText(
-          find.byKey(Key('password-field')), 'Incorrectpassword');
-
-      final Finder loginButtonFinder = find.byKey(Key('login-button-key'));
-      await tester.ensureVisible(loginButtonFinder);
-      await tester.tap(loginButtonFinder);
+      await tester.tap(find.byKey(Key('login-button-key')));
       await tester.pumpAndSettle();
 
       expect(find.byKey(Key('error-dialog')), findsOneWidget);
