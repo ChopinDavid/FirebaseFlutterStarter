@@ -18,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final AuthBloc _authBloc = AuthBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -26,104 +25,100 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) async {
-            if (state is AuthSignupError) {
-              Navigator.of(context).pop();
-              await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AwareAlertDialog(
-                      key: Key('error-dialog'),
-                      title: Text('Error'),
-                      content: Text(state.error.toString()),
-                      actions: <Widget>[
-                        AwareButton(
-                          child: Text('Ok'),
-                          onPressed: () {
-                            _authBloc.add(ResetAuthState());
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  });
-              _authBloc.add(ResetAuthState());
-            }
-
-            if (state is AuthLoading) {
-              showDialog(
-                context: context,
-                builder: (context) =>
-                    Center(child: CircularProgressIndicator()),
-              );
-            }
-          },
-          bloc: _authBloc,
-          builder: (scaffoldContext, state) {
-            if (state is AuthLoginComplete) {
-              final navigationService = GetIt.instance.get<NavigationService>();
-              SchedulerBinding.instance?.addPostFrameCallback(
-                  (_) => navigationService.pushNamed(Routes.TABBAR));
-            }
-            return Container(
-              color: Colors.white,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Form(
-                    key: _formKey,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 40.0, horizontal: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Email'),
-                          TextFormField(
-                            key: Key('email-field'),
-                            controller: emailController,
-                            autocorrect: false,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (email) {
-                              return StringValidator.isValidEmail(email);
-                            },
-                          ),
-                          SizedBox(height: 40),
-                          Text('Password'),
-                          TextFormField(
-                            key: Key('password-field'),
-                            controller: passwordController,
-                            autocorrect: false,
-                            obscureText: true,
-                          ),
-                          SizedBox(height: 40),
-                          Center(
-                            child: AwareButton(
-                              key: Key('login-button-key'),
-                              onPressed: () {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  _authBloc.add(
-                                    LoginUserWithEmailAndPassword(
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Text('Login'),
-                            ),
-                          ),
-                        ],
-                      ),
+      body: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) async {
+        if (state is AuthSignupError) {
+          Navigator.of(context).pop();
+          await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AwareAlertDialog(
+                  key: Key('error-dialog'),
+                  title: Text('Error'),
+                  content: Text(state.error.toString()),
+                  actions: <Widget>[
+                    AwareButton(
+                      child: Text('Ok'),
+                      onPressed: () {
+                        BlocProvider.of<AuthBloc>(context)
+                            .add(ResetAuthState());
+                        Navigator.of(context).pop();
+                      },
                     ),
+                  ],
+                );
+              });
+          BlocProvider.of<AuthBloc>(context).add(ResetAuthState());
+        }
+
+        if (state is AuthLoading) {
+          showDialog(
+            context: context,
+            builder: (context) => Center(child: CircularProgressIndicator()),
+          );
+        }
+      }, builder: (scaffoldContext, state) {
+        if (state is AuthLoginComplete) {
+          final navigationService = GetIt.instance.get<NavigationService>();
+          SchedulerBinding.instance?.addPostFrameCallback(
+              (_) => navigationService.pushNamed(Routes.TABBAR));
+        }
+        return Container(
+          color: Colors.white,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Email'),
+                      TextFormField(
+                        key: Key('email-field'),
+                        controller: emailController,
+                        autocorrect: false,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (email) {
+                          return StringValidator.isValidEmail(email);
+                        },
+                      ),
+                      SizedBox(height: 40),
+                      Text('Password'),
+                      TextFormField(
+                        key: Key('password-field'),
+                        controller: passwordController,
+                        autocorrect: false,
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 40),
+                      Center(
+                        child: AwareButton(
+                          key: Key('login-button-key'),
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              BlocProvider.of<AuthBloc>(context).add(
+                                LoginUserWithEmailAndPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                ),
+                              );
+                            }
+                          },
+                          child: Text('Login'),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            );
-          }),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
