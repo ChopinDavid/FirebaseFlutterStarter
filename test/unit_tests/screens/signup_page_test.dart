@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_starter/models/routes.dart';
 import 'package:firebase_flutter_starter/screens/signup_page.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:firebase_flutter_starter/widgets/profile_picture.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
@@ -13,8 +15,9 @@ import '../../mocks.dart';
 import '../../test_utils.dart';
 
 void main() {
+  late AuthBloc mockAuthBloc;
   late NavigationService mockNavigationService;
-  late FirebaseAuth mockFirebaseAuth;
+
   setUpAll(() async {
     TestUtils.setupCloudFirestoreMocks();
     await Firebase.initializeApp();
@@ -24,11 +27,12 @@ void main() {
   setUp(() async {
     await GetIt.instance.reset();
 
+    mockAuthBloc = MockAuthBloc();
     mockNavigationService = MockNavigationService();
-    mockFirebaseAuth = MockFirebaseAuth();
+
+    when(() => mockAuthBloc.state).thenReturn(AuthInitial());
 
     GetIt.instance.registerSingleton<NavigationService>(mockNavigationService);
-    GetIt.instance.registerSingleton<FirebaseAuth>(mockFirebaseAuth);
   });
 
   group('Form validation', () {
@@ -36,7 +40,9 @@ void main() {
       testWidgets(
           'Shows "Please enter a first name..." if the user fails to enter a first name and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         final Finder signupButtonFinder = find.byKey(Key('signup-button-key'));
         await tester.ensureVisible(signupButtonFinder);
@@ -50,7 +56,9 @@ void main() {
       testWidgets(
           'Does not show "Please enter a first name..." if the user enters a first name and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('first-name-field')), 'Leo');
 
@@ -68,7 +76,9 @@ void main() {
       testWidgets(
           'Shows "Please enter a last name..." if the user fails to enter a last name and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         final Finder signupButtonFinder = find.byKey(Key('signup-button-key'));
         await tester.ensureVisible(signupButtonFinder);
@@ -82,7 +92,9 @@ void main() {
       testWidgets(
           'Does not show "Please enter a last name..." if the user enters a last name and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('last-name-field')), 'Tolstoy');
 
@@ -100,7 +112,9 @@ void main() {
       testWidgets(
           'Shows "Please enter an email address..." if the user fails to enter an email address and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         final Finder signupButtonFinder = find.byKey(Key('signup-button-key'));
         await tester.ensureVisible(signupButtonFinder);
@@ -114,7 +128,9 @@ void main() {
       testWidgets(
           'Shows "Please enter a valid email address..." if the user fails to enter an email address and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(
             find.byKey(Key('email-field')), 'leo!tolstoy.com');
@@ -132,7 +148,9 @@ void main() {
       testWidgets(
           'Does not show "Please enter an email address..." or "Please enter a valid email address..." if the user enters a valid email address and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(
             find.byKey(Key('email-field')), 'leo@tolstoy.com');
@@ -153,7 +171,9 @@ void main() {
       testWidgets(
           'Shows "Please enter a password..." if the user fails to enter a password and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         final Finder signupButtonFinder = find.byKey(Key('signup-button-key'));
         await tester.ensureVisible(signupButtonFinder);
@@ -167,7 +187,9 @@ void main() {
       testWidgets(
           'Shows "Password must have 1 uppercase character..." if the user fails to enter a password with an uppercase character and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('password-field')), 'novels9@');
 
@@ -184,7 +206,9 @@ void main() {
       testWidgets(
           'Shows "Password must have 1 special character..." if the user fails to enter a password with a special character and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('password-field')), 'Novels99');
 
@@ -201,7 +225,9 @@ void main() {
       testWidgets(
           'Shows "Password must have 1 number..." if the user fails to enter a password with a number and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('password-field')), 'Novels@@');
 
@@ -217,7 +243,9 @@ void main() {
       testWidgets(
           'Shows "Password must have at least 8 characters..." if the user fails to enter a password with at least 8 characters and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('password-field')), 'Novel9@');
 
@@ -234,7 +262,9 @@ void main() {
       testWidgets(
           'Shows "Password must have 1 uppercase character and at least 8 characters..." if the user fails to enter a password with an uppercase character and at least 8 characters and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('password-field')), 'novel9@');
 
@@ -253,7 +283,9 @@ void main() {
       testWidgets(
           'Shows "Password must have 1 uppercase character, 1 special character, and at least 8 characters..." if the user fails to enter a password with an uppercase character, a special character, and at least 8 characters and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('password-field')), 'novel99');
 
@@ -274,7 +306,9 @@ void main() {
       testWidgets(
           'Shows "Passwords must match..." if the user fails to enter matching emails and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('password-field')), 'Novels9@');
         await tester.enterText(
@@ -292,7 +326,9 @@ void main() {
       testWidgets(
           'Does not show "Passwords must match..." if the user enters matching emails and clicks on the "Signup" button.',
           (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SignupPage()));
+        await tester.pumpWidget(MaterialApp(
+            home: BlocProvider<AuthBloc>(
+                create: (context) => mockAuthBloc, child: SignupPage())));
 
         await tester.enterText(find.byKey(Key('password-field')), 'Novels9@');
         await tester.enterText(
@@ -312,7 +348,15 @@ void main() {
   group('Profile picture', () {
     testWidgets('Tapping profile picture brings up ImageSourceOverlay',
         (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: SignupPage()));
+      whenListen(
+          mockAuthBloc,
+          Stream.fromIterable(
+              [AuthLoginComplete(userCredential: MockUserCredential())]),
+          initialState: AuthInitial());
+
+      await tester.pumpWidget(MaterialApp(
+          home: BlocProvider<AuthBloc>(
+              create: (context) => mockAuthBloc, child: SignupPage())));
 
       await tester.tap(find.byType(ProfilePicture));
 
