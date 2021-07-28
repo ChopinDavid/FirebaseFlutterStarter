@@ -52,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
 
         if (state is AuthLoading) {
           showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (context) => Center(child: CircularProgressIndicator()),
           );

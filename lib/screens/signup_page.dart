@@ -57,6 +57,7 @@ class _SignupPageState extends State<SignupPage> {
 
         if (state is AuthLoading) {
           showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (context) => Center(child: CircularProgressIndicator()),
           );
