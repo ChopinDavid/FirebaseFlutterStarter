@@ -23,7 +23,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider<AuthBloc>(create: (context) => AuthBloc())],
+      providers: [
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         navigatorKey: GetIt.instance<GlobalKey<NavigatorState>>(),

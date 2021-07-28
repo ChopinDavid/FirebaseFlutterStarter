@@ -1,4 +1,5 @@
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_flutter_starter/bloc/account_deletion_bloc.dart';
 import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_starter/models/firebase_flutter_starter_user.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
@@ -18,8 +19,12 @@ class TestUtils {
     registerFallbackValue<AuthState>(AuthInitial());
     registerFallbackValue<AuthEvent>(LoginUserWithEmailAndPassword(
         email: 'leo@tolstoy.com', password: 'Novels9@'));
-    registerFallbackValue<NavigationService>(
-        NavigationService(navKey: GlobalKey<NavigatorState>()));
+    final NavigationService navigationService =
+        NavigationService(navKey: GlobalKey<NavigatorState>());
+    registerFallbackValue<NavigationService>(navigationService);
+    registerFallbackValue<AccountDeletionState>(AccountDeletionInitial());
+    registerFallbackValue<AccountDeletionEvent>(
+        DeleteAccount(enteredPassword: 'Novels9@'));
   }
 
   static void setupCloudFirestoreMocks([Callback? customHandlers]) {

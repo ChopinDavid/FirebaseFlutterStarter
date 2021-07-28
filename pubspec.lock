@@ -254,7 +254,7 @@ packages:
     source: hosted
     version: "3.0.1"
   firebase_auth_mocks:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: firebase_auth_mocks
       url: "https://pub.dartlang.org"

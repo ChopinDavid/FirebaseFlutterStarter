@@ -29,3 +29,5 @@ class AccountDeletionWrongPassword extends AccountDeletionError {
   AccountDeletionWrongPassword({required Exception error})
       : super(error: error);
 }
+
+class AccountDeletionSuccess extends AccountDeletionState {}

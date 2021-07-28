@@ -9,8 +9,6 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 
-import '../services/navigation_service.dart';
-
 part 'account_deletion_event.dart';
 part 'account_deletion_state.dart';
 
@@ -45,7 +43,7 @@ class AccountDeletionBloc
           await GetIt.instance
               .get<DocumentService>()
               .deleteFile(relativePath: 'profilePicture');
-          event.navigationService.popToRoot();
+          yield AccountDeletionSuccess();
         }
       } on FirebaseAuthException catch (error) {
         if (error.code == 'wrong-password') {

@@ -10,12 +10,14 @@ import '../services/navigation_service.dart';
 import '../widgets/aware_button.dart';
 
 class AccountSettingsPage extends StatefulWidget {
+  final AccountDeletionBloc? injectedAccountDeletionBloc;
+  AccountSettingsPage({this.injectedAccountDeletionBloc});
+
   @override
   _AccountSettingsPageState createState() => _AccountSettingsPageState();
 }
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
-  bool isPasswordPromptDisplayed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,11 +29,17 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           Column(
             children: [
               AwareButton(
+                key: Key('initial-delete-account-button'),
                 child: Text('Delete Account'),
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => UserPasswordPrompt(),
+                    builder: (context) => BlocProvider<AccountDeletionBloc>(
+                        create: (_) =>
+                            widget.injectedAccountDeletionBloc != null
+                                ? widget.injectedAccountDeletionBloc!
+                                : AccountDeletionBloc(),
+                        child: UserPasswordPrompt()),
                   );
                 },
               )
@@ -44,32 +52,35 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 }
 
 class UserPasswordPrompt extends StatelessWidget {
-  final AccountDeletionBloc _accountDeletionBloc = AccountDeletionBloc();
-
   @override
   Widget build(BuildContext context) {
     final TextEditingController _textFieldController = TextEditingController();
-    final NavigationService _navigationService =
-        GetIt.instance.get<NavigationService>();
     return Material(
       type: MaterialType.transparency,
-      child: BlocBuilder<AccountDeletionBloc, AccountDeletionState>(
-        bloc: _accountDeletionBloc,
+      child: BlocConsumer<AccountDeletionBloc, AccountDeletionState>(
+        bloc: BlocProvider.of<AccountDeletionBloc>(context),
+        listener: (context, state) {
+          if (state is AccountDeletionSuccess) {
+            GetIt.instance.get<NavigationService>().popToRoot();
+          }
+        },
         builder: (context, state) {
           if (state is AccountDeletionInitial) {
             return AwareAlertDialog(
+              key: Key('account-deletion-verification-dialog'),
               title: Text('Are you sure you want to delete your account?'),
               content: Text('This action cannot be undone...'),
               actions: [
                 TextButton(
+                  key: Key('final-delete-account-button'),
                   child: Text(
                     'Delete Account',
                     style: TextStyle(color: Colors.red),
                   ),
-                  onPressed: () => _accountDeletionBloc.add(
+                  onPressed: () =>
+                      BlocProvider.of<AccountDeletionBloc>(context).add(
                     DeleteAccount(
                       enteredPassword: null,
-                      navigationService: _navigationService,
                     ),
                   ),
                 ),
@@ -82,6 +93,7 @@ class UserPasswordPrompt extends StatelessWidget {
           }
           if (state is AccountDeletionError) {
             return AwareAlertDialog(
+              key: Key('enter-password-modal'),
               title: Text(
                 'Enter your password to confirm account deletion.',
                 textAlign: TextAlign.center,
@@ -100,6 +112,7 @@ class UserPasswordPrompt extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 12.0),
                       child: Text(
                         'Incorrect password...',
+                        key: Key('wrong-password-text'),
                         textAlign: TextAlign.left,
                         style: TextStyle(color: Colors.red),
                       ),
@@ -109,10 +122,9 @@ class UserPasswordPrompt extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () {
-                    _accountDeletionBloc.add(
+                    BlocProvider.of<AccountDeletionBloc>(context).add(
                       DeleteAccount(
                         enteredPassword: _textFieldController.text,
-                        navigationService: _navigationService,
                       ),
                     );
                   },

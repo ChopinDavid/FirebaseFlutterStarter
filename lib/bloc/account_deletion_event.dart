@@ -8,13 +8,10 @@ abstract class AccountDeletionEvent extends Equatable {
 
 class DeleteAccount extends AccountDeletionEvent {
   final String? enteredPassword;
-  final NavigationService navigationService;
-  DeleteAccount(
-      {required this.enteredPassword, required this.navigationService});
+  DeleteAccount({required this.enteredPassword});
 
   @override
   List<Object?> get props => [
         enteredPassword,
-        navigationService,
       ];
 }
