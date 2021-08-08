@@ -54,26 +54,6 @@ void main() {
       });
 
       testWidgets(
-          'Shows "Please enter a valid email address..." if the user fails to enter an email address and clicks on the "Login" button.',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(
-            home: BlocProvider<AuthBloc>(
-                create: (context) => mockAuthBloc, child: LoginPage())));
-
-        await tester.enterText(
-            find.byKey(Key('email-field')), 'leo!tolstoy.com');
-
-        final Finder loginButtonFinder = find.byKey(Key('login-button-key'));
-        await tester.ensureVisible(loginButtonFinder);
-        await tester.tap(loginButtonFinder);
-
-        await tester.ensureVisible(find.byKey(Key('email-field')));
-        await tester.pumpAndSettle();
-        expect(
-            find.text('Please enter a valid email address...'), findsOneWidget);
-      });
-
-      testWidgets(
           'Does not show "Please enter an email address..." or "Please enter a valid email address..." if the user enters a valid email address and clicks on the "Login" button.',
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(
@@ -90,8 +70,6 @@ void main() {
         await tester.ensureVisible(find.byKey(Key('email-field')));
         await tester.pumpAndSettle();
         expect(find.text('Please enter an email address...'), findsNothing);
-        expect(
-            find.text('Please enter a valid email address...'), findsNothing);
       });
     });
   });

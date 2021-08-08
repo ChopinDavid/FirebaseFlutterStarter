@@ -1,6 +1,5 @@
 import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_starter/models/routes.dart';
-import 'package:firebase_flutter_starter/models/string_validator.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:firebase_flutter_starter/widgets/aware_alert_dialog.dart';
 import 'package:firebase_flutter_starter/widgets/aware_button.dart';
@@ -85,7 +84,9 @@ class _LoginPageState extends State<LoginPage> {
                         autocorrect: false,
                         keyboardType: TextInputType.emailAddress,
                         validator: (email) {
-                          return StringValidator.isValidEmail(email);
+                          return email?.length == 0
+                              ? 'Please enter an email address...'
+                              : null;
                         },
                       ),
                       SizedBox(height: 40),

@@ -153,7 +153,9 @@ class _SignupPageState extends State<SignupPage> {
                         autocorrect: false,
                         keyboardType: TextInputType.emailAddress,
                         validator: (email) {
-                          return StringValidator.isValidEmail(email);
+                          return email?.length == 0
+                              ? 'Please enter an email address...'
+                              : null;
                         },
                       ),
                       SizedBox(height: 40),
