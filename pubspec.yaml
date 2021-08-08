@@ -59,7 +59,10 @@ dev_dependencies:
   mocktail: ^0.1.4
   mocktail_image_network: ^0.1.0
   bloc_test: ^8.0.1
-  firebase_auth_mocks: ^0.8.0
+  firebase_auth_mocks:
+    git:
+      url: https://github.com/ChopinDavid/firebase_auth_mocks
+      ref: 3745577a0469e4ce773396a4d0eb112149581f2c
 
   build_runner: ^1.11.5
   json_serializable: ^4.0.2

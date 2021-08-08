@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_flutter_starter/bloc/account_deletion_bloc.dart';
 import 'package:firebase_flutter_starter/bloc/auth_bloc.dart';
@@ -25,6 +26,8 @@ class TestUtils {
     registerFallbackValue<AccountDeletionState>(AccountDeletionInitial());
     registerFallbackValue<AccountDeletionEvent>(
         DeleteAccount(enteredPassword: 'Novels9@'));
+    registerFallbackValue<AuthCredential>(
+        AuthCredential(providerId: '', signInMethod: ''));
   }
 
   static void setupCloudFirestoreMocks([Callback? customHandlers]) {
