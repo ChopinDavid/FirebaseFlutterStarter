@@ -62,12 +62,13 @@ class _SignupPageState extends State<SignupPage> {
             builder: (context) => Center(child: CircularProgressIndicator()),
           );
         }
-      }, builder: (scaffoldContext, state) {
+
         if (state is AuthSignupComplete) {
           final navigationService = GetIt.instance.get<NavigationService>();
           SchedulerBinding.instance?.addPostFrameCallback(
               (_) => navigationService.pushNamed(Routes.TABBAR));
         }
+      }, builder: (scaffoldContext, state) {
         return Container(
           color: Colors.white,
           child: Stack(
