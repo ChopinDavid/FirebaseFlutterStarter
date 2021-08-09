@@ -9,7 +9,6 @@ import 'package:firebase_flutter_starter/services/document_service.dart';
 import 'package:firebase_flutter_starter/services/firestore_service.dart';
 import 'package:firebase_flutter_starter/services/navigation_service.dart';
 import 'package:firebase_flutter_starter/services/shared_preferences_service.dart';
-import 'package:flutter/painting.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -44,7 +43,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               final http.Response response =
                   await http.get(Uri.parse(user.profilePictureUrl!));
               await GetIt.instance.get<DocumentService>().saveImageFromBytes(
-                  bytes: response.bodyBytes, relativePath: 'profilePicture');
+                    bytes: response.bodyBytes,
+                    relativePath: 'profilePicture.jpg',
+                  );
             }
             yield (AuthLoginComplete(userCredential: userCredential));
             return;
@@ -76,11 +77,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield AuthInitial();
     } else if (event is SignOut) {
       await _auth.signOut();
-      imageCache!.clear();
-      imageCache!.clearLiveImages();
       await GetIt.instance
           .get<DocumentService>()
-          .deleteFile(relativePath: 'profilePicture');
+          .deleteFile(relativePath: 'profilePicture.jpg');
       event.navigationService.popToRoot();
     }
   }

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/painting.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DocumentService {
@@ -25,7 +24,6 @@ class DocumentService {
   Future<File> saveImageFromBytes(
       {required Uint8List bytes, required String relativePath}) async {
     String path = await _getFilePath(relativePath: relativePath);
-    imageCache!.clearLiveImages();
     return await File(path).writeAsBytes(bytes);
   }
 

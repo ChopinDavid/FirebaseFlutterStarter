@@ -38,11 +38,9 @@ class AccountDeletionBloc
               .get<FirestoreService>()
               .deleteUser(uid: _user.uid);
           await _auth.currentUser!.delete();
-          imageCache!.clear();
-          imageCache!.clearLiveImages();
           await GetIt.instance
               .get<DocumentService>()
-              .deleteFile(relativePath: 'profilePicture');
+              .deleteFile(relativePath: 'profilePicture.jpg');
           yield AccountDeletionSuccess();
         }
       } on FirebaseAuthException catch (error) {

@@ -65,7 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   FutureBuilder<Tuple2<File, bool>>(
                     future: GetIt.instance
                         .get<DocumentService>()
-                        .getImage(relativePath: 'profilePicture')
+                        .getImage(relativePath: 'profilePicture.jpg')
                         .then((file) async {
                       return file.exists().then((fileExists) {
                         return Tuple2(file, fileExists);

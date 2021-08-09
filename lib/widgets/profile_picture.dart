@@ -70,7 +70,7 @@ class ProfilePicture extends StatelessWidget {
                               .get<DocumentService>()
                               .saveImageFromBytes(
                                   bytes: await pickedImage!.readAsBytes(),
-                                  relativePath: 'profilePicture');
+                                  relativePath: 'profilePicture.jpg');
 
                           onImageSelected!(imageFile, null);
                         }

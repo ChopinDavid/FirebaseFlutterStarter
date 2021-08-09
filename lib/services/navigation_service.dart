@@ -16,7 +16,14 @@ class NavigationService {
 
   void pop() => navKey.currentState?.pop();
 
-  void popToRoot() => navKey.currentState?.popUntil((route) => route.isFirst);
+  void popToRoot() => navKey.currentState?.popUntil((route) {
+        if (route.isFirst) {
+          imageCache!.clear();
+          imageCache!.clearLiveImages();
+          return true;
+        }
+        return false;
+      });
 
   void pushNamed(
     String routeName, {
