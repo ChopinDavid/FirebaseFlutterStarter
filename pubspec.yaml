@@ -27,8 +27,8 @@ dependencies:
   firebase_core: ^1.0.0
 #  firebase_analytics: ^7.1.0
   firebase_auth: ^3.0.0
-  cloud_firestore: ^1.0.0
-  firebase_storage: ^8.0.0
+  cloud_firestore: ^2.2.0
+  firebase_storage: ^10.0.0
 
   get_it: ^6.0.0
 
@@ -63,6 +63,11 @@ dev_dependencies:
 
   build_runner: ^1.11.5
   json_serializable: ^4.0.2
+  fake_cloud_firestore: ^1.1.2
+  firebase_storage_mocks:
+    git:
+      url: https://github.com/ChopinDavid/firebase_storage_mocks
+      ref: c228e8a4b29ac9b6ba91571223f7705e0c45cb06
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -7,6 +7,9 @@ import 'package:firebase_flutter_starter/services/storage_service.dart';
 import 'package:get_it/get_it.dart';
 
 class FirestoreService {
+  final FirebaseFirestore firebaseFirestore;
+  FirestoreService({required this.firebaseFirestore});
+
   Future<void> createUser({
     required String uid,
     required String firstName,
@@ -32,7 +35,7 @@ class FirestoreService {
         .get<SharedPreferencesService>()
         .storeCurrentUser(user: user);
 
-    return await FirebaseFirestore.instance
+    return await firebaseFirestore
         .collection('users')
         .doc(uid)
         .set(user.toJson());
@@ -40,9 +43,10 @@ class FirestoreService {
 
   Future<FirebaseFlutterStarterUser?> getUser({required String uid}) async {
     DocumentSnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        await firebaseFirestore.collection('users').doc(uid).get();
     if (querySnapshot.exists) {
-      Map<String, dynamic> userDataMap = querySnapshot.data()!;
+      Map<String, dynamic> userDataMap =
+          querySnapshot.data()! as Map<String, dynamic>;
       userDataMap['uid'] = uid;
       return FirebaseFlutterStarterUser.fromJson(userDataMap);
     }
@@ -63,7 +67,7 @@ class FirestoreService {
         .uploadImage(image: profilePicture, path: uid)
         .then((snapshot) => snapshot.ref.getDownloadURL());
 
-    return await FirebaseFirestore.instance
+    return await firebaseFirestore
         .collection('users')
         .doc(uid)
         .update({'profilePictureUrl': _profilePictureDownloadUrl});
